@@ -1,9 +1,7 @@
 <?php
 /**
 Derlemek içiçn :  sudo php sniffer.php
-    Packet sniffer in PHP
-    Will run only on Linux
-    Needs root privileges , so use sudo !!
+  
 */
  
 error_reporting(~E_ALL);
@@ -191,6 +189,7 @@ function print_tcp_packet($packet)
  $DestinationIp = long2ip($packet['dest_add']);
  $DestinationPort = $packet['dest_port'];
  $timess = date('d-m-Y');
+  print_r($SourceIp);
  try{
     $dns = "mysql:host=localhost;dbname=network";
         $user = "root";
@@ -202,42 +201,16 @@ function print_tcp_packet($packet)
         $row = $choice->fetchAll(PDO::FETCH_CLASS);
         #kayıtlara ayrı ayrı erişmek istersek:
         foreach($row as $ro){
-            if ($ro->SourceIp == $SourceIp) {
+            if ($ro->SourceIp == $SourceIp || $ro->SourcePort == $SourcePort || $ro->DestinationIp == $DestinationIp || $ro->DestinationPort == $DestinationPort) {
 
                $result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp','$timess')");
                    if ($result) {
-                    echo "-----oldu";
+                    echo "-----blocked";
                    }else{
                     echo "------olmadi";
                    }
             }
-            if ($ro->SourcePort == $SourcePort) {
-
-               $result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp','$timess')");
-                   if ($result) {
-                    echo "-----oldu";
-                   }else{
-                    echo "------olmadi";
-                   }
-            }
-            if ($ro->DestinationIp == $DestinationIp) {
-
-               $result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp','$timess')");
-                   if ($result) {
-                    echo "-----oldu";
-                   }else{
-                    echo "------olmadi";
-                   }
-            }
-            if ($ro->DestinationPort == $DestinationPort) {
-
-               $result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp','$timess')");
-                   if ($result) {
-                    echo "-----oldu";
-                   }else{
-                    echo "------olmadi";
-                   }
-            }
+                
             
         }
 

@@ -31,8 +31,9 @@ echo "Error:".$e.getMessage();
 <body>
 
 <div class="container">
-  <h2>Engellenen Paket Listesi</h2>           
+  <h2>Blocked Packet List</h2>           
   <table class="table table-hover">
+     <a href="/network/index.php"> <button type="button" class="btn btn-info btn-lg">Add New Block Packets</button></a>
     <thead>
       <tr>
         <th>id</th>

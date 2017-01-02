@@ -143,7 +143,7 @@ function print_tcp_packet($packet)
     $packet = unpack($total_packet , $packet);
      
     //prepare the unpacked data
-    $sniff = array(
+ /*   $sniff = array(
          
         'ip_header' => array(
             'ip_ver' => ($packet['ip_ver_len'] >> 4) ,
@@ -182,14 +182,13 @@ function print_tcp_packet($packet)
         ) ,
    
         'data' => hex_to_str($packet['data'])
-    );
+    ); */
 
  $SourceIp = long2ip($packet['source_add']); 
  $SourcePort = $packet['dest_port'];
  $DestinationIp = long2ip($packet['dest_add']);
  $DestinationPort = $packet['dest_port'];
- $timess = date('d-m-Y');
-  print_r($SourceIp);
+  print_r("Source Ip :".$SourceIp."   "."Source Port :".$SourcePort."	"."Destination Ip :".$DestinationIp."	"."Destination Port :".$DestinationPort."\n");
  try{
     $dns = "mysql:host=localhost;dbname=network";
         $user = "root";
@@ -201,18 +200,43 @@ function print_tcp_packet($packet)
         $row = $choice->fetchAll(PDO::FETCH_CLASS);
         #kayıtlara ayrı ayrı erişmek istersek:
         foreach($row as $ro){
-            if ($ro->SourceIp == $SourceIp || $ro->SourcePort == $SourcePort || $ro->DestinationIp == $DestinationIp || $ro->DestinationPort == $DestinationPort) {
+            if ($ro->SourceIp == $SourceIp) {
 
-               $result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp','$timess')");
+               $result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp',Now())");
                    if ($result) {
-                    echo "-----blocked";
+                    echo "blocked !!!\n\n";
                    }else{
-                    echo "------olmadi";
-                   }
-            }
+                    echo "\n\n\n------ERROR------- \n\n\n";}
+                }
+                if ($ro->SourcePort == $SourcePort) {
+                   	  $result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp',Now())");
+                   if ($result) {
+                    echo "blocked !!!\n\n";
+                   }else{
+                    echo "\n\n\n------ERROR------- \n\n\n";
+                   } 
+                }
+                if ($ro->DestinationIp == $DestinationIp) {
+                   		$result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp',Now())");
+                   if ($result) {
+                    echo "blocked !!!\n\n";
+                   }else{
+                    echo "\n\n\n------ERROR------- \n\n\n";
+                   } 
+                }
+                if ($ro->DestinationPort == $DestinationPort) {
+                   		$result = $pdo->query("INSERT INTO ip_info(SourceIp,SourcePort,DestinationIp,DestinationPort,Flag,CreatedTime) VALUES ('$SourceIp','$SourcePort','$DestinationIp','$DestinationPort','$SourceIp',Now())");
+                   if ($result) {
+                    echo "blocked !!!\n\n";
+                   }else{
+                    echo "\n\n\n------ERROR------- \n\n\n";
+                   } 
+                }
                 
+            }
+               
             
-        }
+        
 
        
 
